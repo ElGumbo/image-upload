@@ -1,0 +1,17 @@
+import { Router } from 'express';
+import { createUser, deleteUser, getUserById, getUsers, updateUser } from '#controllers';
+import { validateBody } from '#middleware';
+import { userSchema } from '#schemas';
+import { formMiddleware } from '#middleware';
+import { cloudUploader } from '#middleware';
+
+const userRoutes = Router();
+
+userRoutes.route('/').get(getUsers).post(validateBody(userSchema), createUser);
+userRoutes
+  .route('/:id')
+  .get(getUserById)
+  .put(formMiddleware, cloudUploader, validateBody(userSchema), updateUser)
+  .delete(deleteUser);
+
+export default userRoutes;
